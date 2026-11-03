@@ -11,6 +11,7 @@ use App\Models\Commit;
 use App\Models\CommitImage;
 use App\Models\LinkPreview;
 use App\Models\User;
+use App\Queries\DevelopersCountQuery;
 use App\Services\Features;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Facades\DB;
@@ -529,6 +530,8 @@ it('includes the images and link previews of quoted commits', function (Log $log
 it('loads the quoted commits of a log without a query per commit', function (Log $log): void {
     Queue::fake([DetectCommitLanguage::class]);
     resolve(Features::class)->all();
+    resolve(DevelopersCountQuery::class)->get();
+
     $user = User::factory()->create(['log' => $log, 'last_seen_at' => today()]);
 
     $queries = function () use ($user, $log): int {

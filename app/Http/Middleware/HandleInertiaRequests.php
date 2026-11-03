@@ -121,8 +121,9 @@ final class HandleInertiaRequests extends Middleware
                     'day' => today()->toDateString(),
                 ] : null,
             ],
-            // Guests see how many developers are here, next to the sign-in button...
-            'developersCount' => fn (): ?int => $user instanceof User ? null : resolve(DevelopersCountQuery::class)->get(),
+            // How many developers are here, beside the logo and, for guests, next to the sign-in button. The count changes
+            // once an hour, so the browser keeps it across visits for as long.
+            'developersCount' => Inertia::once(fn (): int => resolve(DevelopersCountQuery::class)->get())->until(3600),
             'hasUnmoderatedCommits' => fn (): bool => $isAdmin && Commit::query()->pending()->exists(),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'showsWhoToFollow' => $showsWhoToFollow,

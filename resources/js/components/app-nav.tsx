@@ -25,6 +25,7 @@ import StarredCommitController from '@/actions/App/Http/Controllers/StarredCommi
 import AppLogo from '@/components/app-logo';
 import AppLogoIcon from '@/components/app-logo-icon';
 import { ChangelogDialog } from '@/components/changelog-dialog';
+import DevelopersCountBadge from '@/components/developers-count-badge';
 import { GitHubIcon } from '@/components/github-icon';
 import { LogoMenu } from '@/components/logo-menu';
 import { MobileMenuIcon } from '@/components/mobile-menu-icon';
@@ -267,7 +268,7 @@ export function AppNav({
     onSearch: () => void;
     onCompose: () => void;
 }) {
-    const { auth } = usePage().props;
+    const { auth, developersCount } = usePage().props;
     const { isNavOpen: sidebarOpen, isLayoutOpen, setNavOpen } = useNavOpen();
     const items = useNavItems();
     const keys = useKeyLabels();
@@ -290,9 +291,18 @@ export function AppNav({
                             ? '/dev/null, go to the home page'
                             : '/dev/null, go to your log'
                     }
+                    aria-describedby={
+                        developersCount > 0 ? 'nav-developers-count' : undefined
+                    }
                 >
                     <AppLogoIcon className="col-start-1 row-start-1 size-7 self-center fill-current opacity-100 transition-opacity duration-300 motion-reduce:transition-none nav-wide:opacity-0" />
-                    <AppLogo className="col-start-1 row-start-1 w-max max-w-0 overflow-hidden text-[1.75rem] font-bold tracking-[-0.03em] opacity-0 transition-[max-width,opacity] duration-300 ease-[cubic-bezier(0.33,1,0.68,1)] motion-reduce:transition-none nav-wide:max-w-52 nav-wide:opacity-100" />
+                    <span className="relative col-start-1 row-start-1 flex w-max">
+                        <AppLogo className="w-max max-w-0 overflow-hidden text-[1.75rem] font-bold tracking-[-0.03em] opacity-0 transition-[max-width,opacity] duration-300 ease-[cubic-bezier(0.33,1,0.68,1)] motion-reduce:transition-none nav-wide:max-w-52 nav-wide:opacity-100" />
+                        <DevelopersCountBadge
+                            id="nav-developers-count"
+                            className="invisible absolute top-0 left-full ml-1 opacity-0 transition-[opacity,visibility] duration-300 motion-reduce:transition-none nav-wide:visible nav-wide:opacity-100"
+                        />
+                    </span>
                     <span className="col-start-1 row-start-2 max-w-0 overflow-hidden text-sm leading-5 text-muted-foreground opacity-0 transition-[max-width,opacity] duration-300 ease-[cubic-bezier(0.33,1,0.68,1)] motion-reduce:transition-none nav-wide:max-w-52 nav-wide:opacity-100">
                         a social network for devs
                     </span>
@@ -443,7 +453,7 @@ export function AppNav({
 }
 
 export function MobileHeader({ onSearch }: { onSearch: () => void }) {
-    const { auth } = usePage().props;
+    const { auth, developersCount } = usePage().props;
 
     return (
         <div className="flex h-14 items-center justify-between border-b px-4 md:hidden">
@@ -455,8 +465,13 @@ export function MobileHeader({ onSearch }: { onSearch: () => void }) {
                         ? '/dev/null, go to the home page'
                         : '/dev/null, go to your log'
                 }
+                aria-describedby={
+                    developersCount > 0 ? 'header-developers-count' : undefined
+                }
+                className="flex items-center gap-2"
             >
                 <AppLogo className="text-lg" />
+                <DevelopersCountBadge id="header-developers-count" />
             </Link>
 
             <div className="flex items-center gap-1">
